@@ -1,1 +1,1 @@
-/
+JUST PRESS VStest.slnx TO SEE THE WHOLE FILE SEPARATED ON CLASSES (Banking card with List that contains necessary information through constructors with incapsulated information) - still need MORE PRACTICE AND TESTS
