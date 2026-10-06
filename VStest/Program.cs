@@ -35,19 +35,26 @@ class Program
 
 
 
-                    Console.WriteLine("Введите 4-ех значный код");
-                    string? userPin = Console.ReadLine();
+                    Console.Write("Введите 4-ех значный код: ");
+                    string? userPin = ReadSecretPin();
 
 
-                    if (myCard.IsPinCorrect2(userPin) == false)
+                    if (myCard.IsPinCorrect2(userPin) == true)
                     {
-                        if (myCard.CardIsBlocked() == true)
+                        if (myCard.CardIsBlocked() == false)
                         {
-                            Console.WriteLine("Ошибка: соси яица");
+                            myCard.CheckBalance(userPin);
                         }
                         else
                         {
-                            myCard.CheckBalance(userPin);
+                            if (myCard.CardIsBlocked() == true)
+                            {
+                                Console.WriteLine("Ошибка: Карта заблокирована");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Ошибка: Неверен пин-код или карта заблокирована");
+                            }
                         }
 
                     }
@@ -58,7 +65,7 @@ class Program
                     {
                         Console.WriteLine("-- Пополнение счета --");
                         Console.Write("Введите пин-код: ");
-                        string? userPin2 = Console.ReadLine();
+                        string? userPin2 = ReadSecretPin();
 
                         if (int.TryParse(userPin2, out int realPin) == false || string.IsNullOrWhiteSpace(userPin2))
                         {
@@ -108,7 +115,7 @@ class Program
                         Console.WriteLine("-- Снятие денег --");
                         Console.Write("Введите пинки пай: ");
 
-                        string? withDrawPin = Console.ReadLine();
+                        string? withDrawPin = ReadSecretPin();
 
                         if (int.TryParse(withDrawPin, out int pin) == false || string.IsNullOrWhiteSpace(withDrawPin))
                         {
@@ -166,10 +173,10 @@ class Program
                         Console.WriteLine("-- Смена Пин-кода --");
 
                         Console.Write("Введите текущий пин-код: ");
-                        string? pinp = Console.ReadLine();
+                        string? pinp = ReadSecretPin();
 
                         Console.WriteLine("Введите новый 4-ех значный пин-код");
-                        string? newPinp = Console.ReadLine();
+                        string? newPinp = ReadSecretPin();
 
                         // отдаем данные карте, по правилам инкапсуляций произойдет проверка
 
@@ -186,5 +193,43 @@ class Program
                     break;
             }
         }
+    }
+    static string ReadSecretPin()
+    {
+        string pin = ""; // Сейф куда записывается пин-код
+
+        while (true)
+        {
+            // Перехват клавиши без вывода на экран
+            ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+
+            // Если пользователь нажал Enter, значит он закончил вводить ПИН
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                Console.WriteLine(); // перевод курсора на новую строку в консоли
+                break; // Выход из бесконечного цикла
+            }
+
+            // Обработка клавиши Backspace (Стирание)
+            // Если пользователь нажал стереть при том что ошибся и в его (нашем) и в его (или у нас) УЖЕ ЕСТЬ буквы! 
+            if (keyInfo.Key == ConsoleKey.Backspace && pin.Length > 0)
+            {
+                pin = pin.Substring(0, pin.Length - 1); // Удаление самого последнего символа из памяти в нашей строке
+
+                // Главный трюк со стиранием с экрана
+                // \b - Возвращение курсора на 1 шаг назад
+                // Пробел - Зачистка старой звездочки пустотой
+                // \b - снова возвращает курсор назад чтобы новый символ встал на пустое место
+                Console.Write("\b \b");
+            }
+
+            // Проверка ввода нажатия именно текстовой клавиши (Цифры/Буквы) вместо shift, ctrl, Alt, esc.
+            else if (!char.IsControl(keyInfo.KeyChar))
+            {
+                pin += keyInfo.KeyChar; // Добавление реального символа в наш сейф текста pin
+                Console.Write("*"); // Замена текста с видимых букв на символ звездочки обманки на экран
+            }
+        }
+        return pin; // Возвращаем полностью собранный секретный пин-код
     }
 }

@@ -148,7 +148,7 @@ public class BankCard
             return false; // Старый пин-код неверен
         }
 
-        if (string.IsNullOrWhiteSpace(newPin) || newPin.Length != 4 || int.TryParse(newPin, out _) == false)
+        if (string.IsNullOrWhiteSpace(newPin) || newPin.Length != 4 || int.TryParse(newPin, out int stariybog) == false)
         {
             return false;
         }
