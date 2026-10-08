@@ -43,6 +43,8 @@ namespace VStest
             Console.WriteLine($"Успешно проехали {distance}");
             return true;
         }
+
+
         // метод заправки
         public void Refuel(double liters)
         {
@@ -52,16 +54,22 @@ namespace VStest
                 return;
             }
 
-            Console.WriteLine($"Бак успешно заправлен на {liters} литров - ваш бак равен {Fuel}");
+            // Прибавили бензин
             Fuel += liters;
 
+            // Проверка перелива - если перелилось подрезаем до максимума
             if (Fuel > MaxFuel)
             {
                 Fuel = MaxFuel;
-                Console.WriteLine("Вы заправили полный бак");
-                return;
+                Console.WriteLine("Вы заправили полный бак: Вместилось сколько влезло");
+                // return писать необязательно
             }
+            else
+            {
+                Console.WriteLine($"Бак успешно заправлен на {liters} литров");
+            }
+
+            Console.WriteLine($"Текущее топливо {Fuel} из {MaxFuel}");
         }
     }
 }
-
