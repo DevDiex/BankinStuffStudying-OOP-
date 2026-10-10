@@ -5,6 +5,8 @@ using System.Text;
 namespace VStest
 {
 
+
+
     public class Car
     {
         // Открытые свойства без возможности их изменить вне класса

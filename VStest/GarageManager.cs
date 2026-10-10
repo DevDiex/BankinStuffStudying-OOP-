@@ -58,26 +58,90 @@ namespace VStest
 
         }
 
+        public void ShowReadyForTripCars()
+        {
+
+            Console.WriteLine("\n -- Машины, готовые к дальнему рейсу (бак >= 50%) --");
+
+            // LINQ запрос
+            List<Car> readyCars = _cars.Where(c => c.Fuel >= (c.MaxFuel / 2)).ToList();
+
+            // Проверяем если что-то нашли
+            if (readyCars.Count == 0)
+            {
+                Console.WriteLine("Ни одна машина не готова к рейсу");
+                return;
+            }
+
+            // Вывод результата
+            foreach (Car car in readyCars)
+            {
+                Console.WriteLine($"({car.Model}) ({car.Color}) - готова, Топливо: {car.Fuel}/{car.MaxFuel}");
+
+            }
+            // ToList() - создает отдельный новый список не меняя старый для удобства который может быть изменен (только с нашими свойствами список)
+        }
+
+        public void FindCarByModel(string searchModel)
+        {
+            Console.WriteLine($"\n -- Поиск машины по модели: {searchModel}");
+
+            // LINQ ищет первую машину совпадующую с запросом
+            // .ToLower() - нужен чтобы поиск работал независимо от регистра (bmw, BMW, Bmw) - без разницы
+            Car? foundCar = _cars.FirstOrDefault(c => c.Model.ToLower() == searchModel.ToLower());
+
+            if (foundCar == null)
+            {
+                Console.WriteLine($"Модель {searchModel} была не найдена в вашем гараже");
+            }
+            else
+            {
+                Console.WriteLine($" {foundCar.Model} с цветом {foundCar.Color} была успешно найдена в гараже");
+            }
+            // First - останавливает список сразу экономя время процессора доходя до первой машины по свойству
+            // OrDefault - пройдя список и ничего не найдя будет по умолчанию значением Null без вылета с ошибкой
+        }
+
+        public void ShowCarByFuel()
+        {
+            Console.WriteLine("\n -- Сортировка автопарка по уровню топлива (от большего к меньшему) -- ");
+
+            if (_cars.Count == 0)
+            {
+                Console.WriteLine("Машин в гараже не найдено");
+                return;
+            }
+
+            // Сортировка списка по убыванию свойства fuel
+            List<Car> sortedCars = _cars.OrderByDescending(car => car.Fuel).ToList();
+
+            foreach (Car car in sortedCars)
+            {
+                Console.WriteLine($"{car.Model} с {car.Fuel} литрами топлива");
+            }
+        }
+        // Чем то схоже с методом пузырька
+
     }
 }
 
 
 //Метод фильтраций - .where() - foreach + if
 
-    //public void LowFuelCars()
-    //{
+//public void LowFuelCars()
+//{
 
-    //    Console.WriteLine("Машины которым нужна заправка")
+//    Console.WriteLine("Машины которым нужна заправка")
 
 
 
-    //    List<Car> lowfuelcar _cars.Where(car => car.Fuel < 10).ToList()
+//    List<Car> lowfuelcar _cars.Where(car => car.Fuel < 10).ToList()
 
-    //        foreach (var car in LowFuelCars)
-    //    {
-    //        Console.WriteLine($"{car.Model} - срочно заправить, Осталось {car.Fuel} л.")
-    //    }
-    //}
+//        foreach (var car in LowFuelCars)
+//    {
+//        Console.WriteLine($"{car.Model} - срочно заправить, Осталось {car.Fuel} л.")
+//    }
+//}
 
 // Поиск одного элемента - .FirstOrDefault()
 //    public void FindCarByModeL(string modelName)
